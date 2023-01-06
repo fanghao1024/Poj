@@ -9,7 +9,7 @@ struct BigNum{
 			val[i]=0;
 		}
 	}
-}bignum[1010];
+}bignum[105][1010];
 
 void add(BigNum& b1,BigNum& b2){
 	for(int i=0;i<M;i++){
@@ -27,27 +27,32 @@ int main(){
 	int N,K;
 	scanf("%d %d",&N,&K);
 	
-	bignum[0].val[0]=1;
-
+	for(int i=0;i<=K;i++){
+		bignum[i][0].val[0]=1;
+	}
+	for(int i=1;i<=N;i++){
+		bignum[0][i].val[0]=0;
+	}
 	for(int i=1;i<=K;i++){
 		for(int j=1;j<=N;j++){
+			add(bignum[i][j],bignum[i-1][j]);
 			if(j-i>=0){
-				add(bignum[j],bignum[j-i]);
+				add(bignum[i][j],bignum[i][j-i]);
 			}
 
 		}
 	}
 	bool startzero=true;
 	for(int i=M-1;i>=1;i--){
-		if(bignum[N].val[i]==0&&startzero){
+		if(bignum[K][N].val[i]==0&&startzero){
 			continue;
 		}
 		startzero=false;
 			
-		printf("%d",bignum[N].val[i]);
+		printf("%d",bignum[K][N].val[i]);
 
 		
 	}
-	printf("%d\n",bignum[N].val[0]);
+	printf("%d\n",bignum[K][N].val[0]);
 	return 0;
 }
