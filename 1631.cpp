@@ -14,8 +14,8 @@ int main(){
 		for(int i=0;i<p;i++){
 			scanf("%d",&port[i]);
 		}
-		//fill(record,record+p,0x3fffffff);
-		memset(record,0x3fffffff,sizeof(record));
+		fill(record,record+p,0x3fffffff);
+		//memset(record,0x3fffffff,sizeof(record));
 		for(int i=0;i<p;i++){
 			*lower_bound(record,record+p,port[i])=port[i];
 		}
