@@ -37,14 +37,14 @@ int main(){
 				}
 			}
 		}
-		
+		/*
 		for(int i=0;i<N;i++){
 			for(int j=0;j<N;j++){
 				printf("%d ",dis[i][j]);
 			}
 			printf("\n");
 		}
-		
+		*/
 		double res=max_n*N;
 		
 		for(int i=0;i<N;i++){
@@ -54,9 +54,9 @@ int main(){
 				if(i!=j&&dis[i][j]!=max_n){
 					row_sum+=dis[i][j];
 					counts+=1;
-				}
-				res=res<row_sum/counts?res:row_sum/counts;
+				}	
 			}
+			res=res<row_sum/counts?res:row_sum/counts;
 		}
 		printf("%d\n",int(100*res));
 	}
