@@ -35,51 +35,17 @@ void build(){
 	for(int i=1;i<=N;i++){
 		int temp=num[i];
 		count_digit(belong[i],temp);
-		/*
-		if(temp==0){
-			rec[belong[i]][1][0]++;
-			continue;
-		}
-		int index=1;
-		while(temp>0){
-			int m=temp%10;
-			rec[belong[i]][index][m]++;
-			index++;
-			temp/=10;
-		  }*/
+
 	}
 	
 }
 void modify(int x,int y){
 	int temp=num[x];
 	sub_digit(belong[x],temp);
-	/*
-	if(temp==0){
-		rec[belong[x]][1][0]--;
-	}else{
-		int index=1;
-		while(temp>0){
-			int m=temp%10;
-			rec[belong[x]][index][m]--;
-			index++;
-			temp/=10;
-		}
-	  }*/
+
 	num[x]=y;
 	count_digit(belong[x],y);
-	/*
-	temp=num[x];
-	if(temp==0){
-		rec[belong[x]][1][0]++;
-	}else{
-		int index=1;
-		while(temp>0){
-			int m=temp%10;
-			rec[belong[x]][index][m]++;
-			index++;
-			temp/=10;
-		}
-	  }*/
+
 	
 }
 int query(int a,int b,int c,int d){
