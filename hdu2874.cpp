@@ -7,7 +7,7 @@ int N,M,C;
 struct Edge{
 	int to,next;
 	int val;
-}E[max_n<<1],QE[max_n<<1];
+}E[max_n<<1],QE[2000010];
 int par[max_n];
 int dis[max_n];
 int head[max_n];
@@ -65,30 +65,32 @@ void tarjan(int u,int root){
 }
 
 int main(){
-	scanf("%d %d %d",&N,&M,&C);
-	init();
-	int x,y,d;
-	for(int i=0;i<M;i++){
-		scanf("%d %d %d",&x,&y,&d);
-		add1(x,y,d);
-		add1(y,x,d);
-	}
-	for(int i=0;i<C;i++){
-		scanf("%d %d",&x,&y);
-		add2(x,y);
-		add2(y,x);
-	}
-	for(int i=1;i<=N;i++){
-		
-		if(!vis[i]){
-			tarjan(i,i);
+	
+	while(scanf("%d %d %d",&N,&M,&C)!=EOF){
+		init();
+		int x,y,d;
+		for(int i=0;i<M;i++){
+			scanf("%d %d %d",&x,&y,&d);
+			add1(x,y,d);
+			add1(y,x,d);
 		}
-	}
-	for(int i=0;i<C;i++){
-		if(QE[2*i].val==-1){
-			printf("Not connected\n");
-		}else{
-			printf("%d\n",QE[2*i].val);
+		for(int i=0;i<C;i++){
+			scanf("%d %d",&x,&y);
+			add2(x,y);
+			add2(y,x);
+		}
+		for(int i=1;i<=N;i++){
+			
+			if(!vis[i]){
+				tarjan(i,i);
+			}
+		}
+		for(int i=0;i<C;i++){
+			if(QE[2*i].val==-1){
+				printf("Not connected\n");
+			}else{
+				printf("%d\n",QE[2*i].val);
+			}
 		}
 	}
 	return 0;
