@@ -78,14 +78,14 @@ int main(){
 		for(int i=1;i<=V;i++){
 			for(int j=head[i];j!=-1;j=edge[j].nxt){
 				int v=edge[j].to;
-				if(low[v]!=low[i]){
-					degree[low[i]]++;
+				if(low[v]!=rec[i]){
+					degree[rec[i]]++;
 				}
 			}
 		}
 		int count=0;
 		for(int i=1;i<=V;i++){
-			if(!degree[low[i]]){
+			if(!degree[rec[i]]){
 				if(count) printf(" ");
 				printf("%d",i);
 				count++;
