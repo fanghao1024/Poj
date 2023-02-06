@@ -59,6 +59,10 @@ int main(){
 			ans=ans>mx[r[i]]?ans:mx[r[i]];
 		}
 	}
+	for(int i=0;i<=cnt;i++) printf("%d ",mx[i]);
+	printf("\n");
+	for(int i=0;i<=cnt;i++) printf("%d ",sz[i]);
+	printf("\n");
 	printf("%d\n",ans);
 	return 0;
 }
