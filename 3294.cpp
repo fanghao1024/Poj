@@ -3,12 +3,11 @@
 #include<algorithm>
 using namespace std;
 
-const int max_n=105;
-const int max_l=100500;
-char s[max_l];
-int r[max_l];
 int N,n,len;
-int belong[max_l];
+const int max_l=100500;
+const int max_n=105;
+char s[max_l];
+int r[max_l],belong[max_l];
 bool vis[max_n];
 
 struct SA{
@@ -49,6 +48,7 @@ struct SA{
 		}
 	}
 	bool check(int mid,bool flag){
+		
 		int i=2;
 		while(1){
 			memset(vis,0,sizeof(vis));
@@ -66,12 +66,13 @@ struct SA{
 			if(cnt>N/2){
 				if(!flag) return true;
 				else{
-					for(int k=sa[i-1],t=0;t<mid;k++,t++){
-						printf("%c",s[k]);
+					for(int j=sa[i-1],t=0;t<mid;j++,t++){
+						printf("%c",s[j]);
 					}
 					printf("\n");
 				}
 			}
+			
 		}
 		return false;
 	}
@@ -87,6 +88,7 @@ struct SA{
 				r=mid-1;
 			}
 		}
+		
 		if(ans==-1){
 			printf("?\n");
 		}else{
@@ -96,11 +98,11 @@ struct SA{
 }sa;
 int main(){
 	while(scanf("%d",&N)&&N){
+		memset(belong,0,sizeof(belong));
 		n=0;
 		for(int i=1;i<=N;i++){
 			scanf("%s",s+n);
-			if(i==1)
-				len=strlen(s);
+			if(i==1) len=strlen(s);
 			for(;s[n]!='\0';n++){
 				r[n]=s[n]-'a'+1;
 				belong[n]=i;
@@ -108,13 +110,13 @@ int main(){
 			s[n]='#';
 			r[n]=i+100;
 			n++;
-		}
+		}			
 		n--;
 		r[n]=0;
-		sa.get_sa(n+1,220);
+		sa.get_sa(n+1,250);
 		sa.get_height();
 		sa.work();
 		printf("\n");
-	}		
+	}
 	return 0;
 }
