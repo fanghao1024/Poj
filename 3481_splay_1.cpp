@@ -7,6 +7,15 @@ struct node{
 	int val,fa,id;//值，父亲 
 }tr[maxn];
 
+void print(int rt){//中序遍历测试
+	if(!rt) return;
+	if(tr[rt].son[0])
+		print(tr[rt].son[0]);
+	printf("val: %d lc: %d rc: %d\n",tr[rt].val,tr[tr[rt].son[0]].val,tr[tr[rt].son[1]].val);
+	if(tr[rt].son[1])
+		print(tr[rt].son[1]);
+}
+
 void init(){
 	cnt=root=0;
 	tr[0].son[0]=tr[0].son[1]=0;
@@ -104,8 +113,9 @@ void Join(int t1,int t2){
 	else
 	{
 		root=t2;
+		if(!root) init();
 	}
-		
+	
 }
 
 void Delete(int val){//删除值val
@@ -120,10 +130,19 @@ int main(){
 	while(scanf("%d",&n)&&n){
 		switch(n){
 		case 1:
+			//printf("-----begin 1 bef------\n");
+			//print(root);
+			//printf("------end 1 bef------\n");
 			scanf("%d %d",&id,&val);
 			Insert(id,val);
+			//printf("-----begin 1 aft------\n");
+			//print(root);
+			//printf("------end 1 aft------\n");
 			break;
 		case 2:
+			//printf("------begin 2 before-----\n");
+			//print(root);
+			//printf("------end 2 before------\n");
 			if(!root){
 				printf("0\n");
 			}else{
@@ -131,15 +150,23 @@ int main(){
 				printf("%d\n",tr[root].id);
 				Delete(tr[root].val);
 			}
-			
+			//printf("------begin 2 aft-----\n");
+			//print(root);
+			//printf("------end 2 aft------\n");
 			break;
 		case 3:
 			if(!root){
 				printf("0\n");
 			}else{
+				//printf("------begin 3 before-----\n");
+				//print(root);
+				//printf("------end 3 before------\n");
 				Findmin();
 				printf("%d\n",tr[root].id);
 				Delete(tr[root].val);
+				//printf("------begin 3 aft-----\n");
+				//print(root);
+				//printf("------end 3 aft------\n");
 			}
 			break;	
 		}

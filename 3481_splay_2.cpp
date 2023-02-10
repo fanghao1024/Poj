@@ -1,22 +1,22 @@
 #include<cstdio>
 
-const int man_n=1000005;
-int ops,cnt,root;
+const int max_n=1000005;
 struct Tr{
 	int son[2];
 	int fa;
 	int id,val;
-}tr[man_n];
+}tr[max_n];
+int cnt,root;
 void init(){
 	cnt=root=0;
 	tr[0].son[0]=tr[0].son[1]=0;
 }
 int newNode(int father,int id,int val){
 	cnt++;
-	tr[cnt].fa=father;
-	tr[cnt].son[0]=tr[cnt].son[1]=0;
 	tr[cnt].id=id;
 	tr[cnt].val=val;
+	tr[cnt].fa=father;
+	tr[cnt].son[0]=tr[cnt].son[1]=0;
 	return cnt;
 }
 void Rotate(int x){
@@ -72,12 +72,12 @@ bool Find(int val){
 		}
 	}
 }
-bool Split(int val,int& t1,int& t2){
-	if(Find(val)){
-		t1=tr[root].son[0];
-		t2=tr[root].son[1];
-		tr[t1].fa=tr[t2].fa=0;
-		root=t1;
+bool Split(int x,int& L,int& R){
+	if(Find(x)){
+		L=tr[root].son[0];
+		R=tr[root].son[1];
+		root=L;
+		tr[L].fa=tr[R].fa=0;
 		return true;
 	}
 	return false;
@@ -92,39 +92,39 @@ void Join(int t1,int t2){
 		if(!root) init();
 	}
 }
-void Delete(int val){
+void Delete(int x){
 	int t1=0,t2=0;
-	if(Split(val,t1,t2)){
+	if(Split(x,t1,t2)){
 		Join(t1,t2);
 	}
 }
 int main(){
+	int ops,id,val;
 	init();
-	int id,val;
 	while(scanf("%d",&ops)&&ops){
-		switch(ops){
-			case 1:
-				scanf("%d %d",&id,&val);
-				Insert(id,val);
-				break;
-			case 2:
-				if(!root){
-					printf("0\n");
-				}else{
-					FindMax();
-					printf("%d\n",tr[root].id);
-					Delete(tr[root].val);
-				}
-				break;
-			case 3:
-				if(!root){
-					printf("0\n");
-				}else{
-					FindMin();
-					printf("%d\n",tr[root].id);
-					Delete(tr[root].val);
-				}
-				break;
+		switch (ops) {
+		case 1:
+			scanf("%d %d",&id,&val);
+			Insert(id,val);
+			break;
+		case 2:
+			if(!root){
+				printf("0\n");
+			}else{
+				FindMax();
+				printf("%d\n",tr[root].id);
+				Delete(tr[root].val);
+			}
+			break;
+		case 3:
+			if(!root){
+				printf("0\n");
+			}else{
+				FindMin();
+				printf("%d\n",tr[root].id);
+				Delete(tr[root].val);
+			}
+			break;
 		}
 	}
 	return 0;
