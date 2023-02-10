@@ -94,6 +94,32 @@ void query(int L,int R,int p,int pl,int pr){
 	if(L<=mid) query(L,R,ls(p),pl,mid);
 	if(R>mid) query(L,R,rs(p),mid+1,pr);
 }
+int ask(int x,int y){
+	while(top[x]!=top[y]){
+		if(dep[top[x]]<dep[top[y]]){
+			swap(x,y);
+		}
+		query(id[top[x]],id[x],1,1,N);
+		x=fa[top[x]];
+	}
+	if(dep[x]==dep[y]) return ;
+	if(dep[x]>dep[y]) swap(x,y);
+	query(id[x]+1,id[y],1,1,N);
+}
+void NEGATE(int x, int y)
+{
+	while (top[x] != top[y])
+	{
+		if (dep[top[x]] < dep[top[y]]) swap(x, y);
+		update2(id[top[x]], id[x], 1, 1, N);
+		x = fa[top[x]];
+	}
+	if (dep[x] == dep[y])
+		return;
+	if (dep[x] > dep[y])
+		swap(x, y);
+	update2(id[x] + 1, id[y], 1, 1, N);
+}
 void dfs1(int u,int father){
 	fa[u]=father;
 	dep[u]=dep[father]+1;
@@ -134,6 +160,20 @@ int main(){
 		dfs1(1,0);
 		dfs2(1,1);
 		build(1,1,N);
+		char s[20];
+		while(scanf("%s",s)){
+			if(s[0]=='D') break;
+			scanf("%d %d",&x,&y);
+			if(s[0]=='C'){
+				update1()
+			}else{
+				if(s[0]=='N'){
+
+				}else{
+
+				}
+			}
+		}
 	}
 	return 0;
 }
