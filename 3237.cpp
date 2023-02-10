@@ -4,12 +4,12 @@
 using namespace std;
 
 const int max_n=10010;
-int T,N,cnt,num;
+int T,N,cnt,num,maxAns;
 int head[max_n];
 int fa[max_n],son[max_n],siz[max_n],dep[max_n],top[max_n],id[max_n];
 int w[max_n],new_w[max_n];
 int maxtree[max_n<<2],mintree[max_n<<2];
-int addtag[max_n<<2],multag[max_n<<2];
+int tag[max_n<<2];
 int ls(int x){return x<<1;}
 int rs(int x){return x<<1|1;}
 struct Edge{
@@ -28,9 +28,19 @@ void add_edge(int x,int y,int w){
 	edge[cnt].nxt=head[x];
 	head[x]=cnt++;
 }
-void add_tag(int p,int pl,int pr,int d1,int d2){
-	addtag[p]+=p;
-	
+void push_down(int p,int pl,int pr){
+	if(pl==pr) return ;
+	if(tag[p]){
+		maxtree[ls(p)]=-maxtree[ls(p)];
+		mintree[ls(p)]=-mintree[ls(p)];
+		swap(maxtree[ls(p)],mintree[ls(p)]);
+		maxtree[rs(p)] = -maxtree[rs(p)];
+		mintree[rs(p)] = -mintree[rs(p)];
+		swap(maxtree[rs(p)], mintree[rs(p)]);
+		tag[ls(p)]^=1;
+		tag[rs[p]]^=1;
+		tag[p]=0;
+	}
 }
 void push_up(int p){
 	maxtree[p]=max(maxtree[ls(p)],maxtree[rs(p)]);
@@ -48,8 +58,41 @@ void build(int p,int pl,int pr){
 	build(rs(p),mid+1,pr);
 	push_up(p);
 }
-void update(){
-	
+void update1(int k,int p,int pl,int pr,int d){
+	if(k<pl||k>pr) return ;
+	if(k==pl&&k==pr){
+		maxtree[p]=mintree[p]=d;
+		return ;
+	}
+	push_down(p,pl,pr);
+	int mid=(pl+pr)>>1;
+	update1(k,ls(p),pl,mid,d);
+	update1(k,rs(p),mid+1,pr,d);
+	push_up(p);
+}
+void update2(int L,int R,int p,int pl,int pr){
+	if(L<=pl&&pr<=R){
+		maxtree[p] = -maxtree[p];
+		mintree[p] = -mintree[p];
+		swap(maxtree[p], mintree[p]);
+		tag[p]^=1;
+		return ;
+	}
+	push_down(p,pl,pr);
+	int mid=(pl+pr)>>1;
+	if(L<=mid) update2(L,R,ls(p),pl,mid);
+	if(R>mid) update2(L,R,rs(p),mid+1,pr);
+	push_up(p);
+}
+void query(int L,int R,int p,int pl,int pr){
+	if(L<=pl&&pr<=pr){
+		maxAns=max(maxAns,maxtree[p]);
+		return ;
+	}
+	push_down(p,pl,pr);
+	int mid=(pl+pr)>>1;
+	if(L<=mid) query(L,R,ls(p),pl,mid);
+	if(R>mid) query(L,R,rs(p),mid+1,pr);
 }
 void dfs1(int u,int father){
 	fa[u]=father;
