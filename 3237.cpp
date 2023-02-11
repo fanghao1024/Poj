@@ -4,7 +4,7 @@
 using namespace std;
 
 const int max_n=10010;
-int T,N,cnt,num,ansMax;
+int T,N,cnt,num,maxAns;
 int head[max_n];
 int fa[max_n],son[max_n],siz[max_n],dep[max_n],top[max_n],id[max_n];
 int w[max_n],new_w[max_n];
@@ -28,27 +28,27 @@ void add_edge(int x,int y,int w){
 	edge[cnt].nxt=head[x];
 	head[x]=cnt++;
 }
-
-void push_up(int p){
-	maxtree[p]=max(maxtree[ls(p)],maxtree[rs(p)]);
-	mintree[p]=min(mintree[ls(p)],mintree[rs(p)]);
-}
 void push_down(int p,int pl,int pr){
 	if(pl==pr) return ;
 	if(tag[p]){
 		maxtree[ls(p)]=-maxtree[ls(p)];
 		mintree[ls(p)]=-mintree[ls(p)];
 		swap(maxtree[ls(p)],mintree[ls(p)]);
-		maxtree[rs(p)]=-maxtree[rs(p)];
-		mintree[rs(p)]=-mintree[rs(p)];
-		swap(maxtree[rs(p)],mintree[rs(p)]);
+		maxtree[rs(p)] = -maxtree[rs(p)];
+		mintree[rs(p)] = -mintree[rs(p)];
+		swap(maxtree[rs(p)], mintree[rs(p)]);
 		tag[ls(p)]^=1;
-		tag[rs(p)]^=1;
+		tag[rs[p]]^=1;
 		tag[p]=0;
 	}
 }
+void push_up(int p){
+	maxtree[p]=max(maxtree[ls(p)],maxtree[rs(p)]);
+	mintree[p]=min(mintree[ls(p)],mintree[rs(p)]);
+}
 void build(int p,int pl,int pr){
-	tag[p]=0;
+	addtag[p]=0;
+	multag[p]=1;
 	if(pl==pr){
 		mintree[p]=maxtree[p]=new_w[pl];
 		return ;
@@ -60,7 +60,7 @@ void build(int p,int pl,int pr){
 }
 void update1(int k,int p,int pl,int pr,int d){
 	if(k<pl||k>pr) return ;
-	if(pl==k&&pr==k){
+	if(k==pl&&k==pr){
 		maxtree[p]=mintree[p]=d;
 		return ;
 	}
@@ -72,9 +72,9 @@ void update1(int k,int p,int pl,int pr,int d){
 }
 void update2(int L,int R,int p,int pl,int pr){
 	if(L<=pl&&pr<=R){
-		maxtree[p]=-maxtree[p];
-		mintree[p]=-mintree[p];
-		swap(maxtree[p],mintree[p]);
+		maxtree[p] = -maxtree[p];
+		mintree[p] = -mintree[p];
+		swap(maxtree[p], mintree[p]);
 		tag[p]^=1;
 		return ;
 	}
@@ -85,14 +85,40 @@ void update2(int L,int R,int p,int pl,int pr){
 	push_up(p);
 }
 void query(int L,int R,int p,int pl,int pr){
-	if(L<=pl&&pr<=R){
-		ansMax=max(ansMax,maxtree[p]);
-		return;
+	if(L<=pl&&pr<=pr){
+		maxAns=max(maxAns,maxtree[p]);
+		return ;
 	}
 	push_down(p,pl,pr);
 	int mid=(pl+pr)>>1;
 	if(L<=mid) query(L,R,ls(p),pl,mid);
 	if(R>mid) query(L,R,rs(p),mid+1,pr);
+}
+int ask(int x,int y){
+	while(top[x]!=top[y]){
+		if(dep[top[x]]<dep[top[y]]){
+			swap(x,y);
+		}
+		query(id[top[x]],id[x],1,1,N);
+		x=fa[top[x]];
+	}
+	if(dep[x]==dep[y]) return ;
+	if(dep[x]>dep[y]) swap(x,y);
+	query(id[x]+1,id[y],1,1,N);
+}
+void NEGATE(int x, int y)
+{
+	while (top[x] != top[y])
+	{
+		if (dep[top[x]] < dep[top[y]]) swap(x, y);
+		update2(id[top[x]], id[x], 1, 1, N);
+		x = fa[top[x]];
+	}
+	if (dep[x] == dep[y])
+		return;
+	if (dep[x] > dep[y])
+		swap(x, y);
+	update2(id[x] + 1, id[y], 1, 1, N);
 }
 void dfs1(int u,int father){
 	fa[u]=father;
@@ -119,26 +145,6 @@ void dfs2(int x,int topx){
 		if(v!=fa[x]&&v!=son[x]) dfs2(v,v);
 	}
 }
-void update_range(int x,int y){
-	while(top[x]!=top[y]){
-		if(dep[top[x]]<dep[top[y]]) swap(x,y);
-		update2(id[top[x]],id[x],1,1,N);
-		x=fa[top[x]];
-	}
-	if(dep[x]==dep[y]) return ;
-	if(dep[x]>dep[y]) swap(x,y);
-	update2(id[x]+1,id[y],1,1,N);
-}
-void ask(int x,int y){
-	while(top[x]!=top[y]){
-		if(dep[top[x]]<dep[top[y]]) swap(x,y);
-		query(id[top[x]],id[x],1,1,N);
-		x=fa[top[x]];
-	}
-	if(dep[x]==dep[y]) return ;
-	if(dep[x]>dep[y]) swap(x,y);
-	query(id[x]+1,id[y],1,1,N);
-}
 int main(){
 	scanf("%d",&T);
 	while(T--){
@@ -159,17 +165,12 @@ int main(){
 			if(s[0]=='D') break;
 			scanf("%d %d",&x,&y);
 			if(s[0]=='C'){
-				int edge1=2*(x-1);
-				int edge2=edge1^1;
-				int v=dep[edge[edge1].to]>dep[edge[edge2].to]?edge[edge1].to:edge[edge2].to;
-				update1(id[v],1,1,N,y);
+				update1()
 			}else{
 				if(s[0]=='N'){
-					update_range(x,y);
+
 				}else{
-					ansMax=-0x3fffffff;
-					ask(x,y);
-					printf("%d\n",ansMax);
+
 				}
 			}
 		}
