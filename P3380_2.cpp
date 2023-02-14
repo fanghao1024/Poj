@@ -24,8 +24,8 @@ int newNode(int val){
 }
 void init(){
 	cnt=0;
-	//node[0].size=0;
-	//node[0].son[0]=node[0].son[1]=0;
+	node[0].size=node[0].num=0;
+	node[0].son[0]=node[0].son[1]=0;
 }
 struct Treap{
 	int root;
@@ -50,13 +50,7 @@ struct Treap{
 	}
 	void insert(int& p,int val){
 		if(!p){
-			//p=newNode(val);
-			p=++cnt;
-			node[cnt].val=val;
-			//node[cnt].son[0]=node[cnt].son[1]=0;
-			node[cnt].pri=rand();
-			node[cnt].size=1;
-			node[cnt].num=1;
+			p=newNode(val);
 			return ;
 		}
 		node[p].size++;
@@ -106,7 +100,6 @@ struct Treap{
 	}
 	
 }tr[max_n<<2];
-
 int ls(int x){return x<<1;}
 int rs(int x){return x<<1|1;};
 void build(int p,int pl,int pr){
