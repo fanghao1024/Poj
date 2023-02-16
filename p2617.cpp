@@ -7,7 +7,7 @@ using namespace std;
 #define lson node[p].son[0]
 #define rson node[p].son[1]
 
-const int max_n = 50010;
+const int max_n = 100010;
 const int inf = 2147483647;
 int N, M, cnt;
 int num[max_n];
