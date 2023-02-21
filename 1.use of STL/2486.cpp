@@ -22,7 +22,7 @@ void add_edge(int x,int y){
     head[x]=cnt++;
 }
 void dfs(int u,int fa){
-    for(int i=0;i<=K;i++) dp[u][i][0]=dp[u][i][1]=val[i];
+    for(int i=0;i<=K;i++) dp[u][i][0]=dp[u][i][1]=val[u];
     for(int i=head[u];i!=-1;i=edge[i].nxt){
         int v=edge[i].to;
         if(v==fa) continue;
@@ -47,7 +47,7 @@ int main(){
             add_edge(y,x);
         }
         dfs(1,-1);
-        printf("~%d\n",max(dp[1][K][0],dp[1][K][1]));
+        printf("%d\n",max(dp[1][K][0],dp[1][K][1]));
     }
     return 0;
 }
