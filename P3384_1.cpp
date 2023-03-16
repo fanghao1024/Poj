@@ -196,6 +196,7 @@ int main(){
 	dfs2(R,R);
 	build(1,1,N);
 	int u,z;
+
 	for(int i=1;i<=M;i++){
 		scanf("%d",&u);
 		switch(u){
