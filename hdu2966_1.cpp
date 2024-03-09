@@ -1,66 +1,60 @@
 #include<cstdio>
+#include<cstring>
 #include<algorithm>
 using namespace std;
 
-#define sq(x) (x)*(x)
 typedef long long ll;
-const int max_n=100010;
-const ll inf=1e18;
+const int max_n=1e5+10;
 const int K=2;
-ll ans;
-int T,N,idx;
-struct Node{
-    int dim[K];
-}a[max_n],p[max_n];
-bool cmp(const Node& a,const Node& b){
-    return a.dim[idx]<b.dim[idx];
+int now;
+struct Point{
+	int dim[K];
+};
+bool cmp(const Point& a,const Point& b){
+	return a.dim[now]<b.dim[now];
 }
-struct KD_Tree{
-    void build(int l,int r,int dep){
-        if(l>r) return ;
-        int mid=(l+r)>>1;
-        idx=dep%K;
-        nth_element(a+l,a+mid,a+r+1,cmp);
-        build(l,mid-1,dep+1);
-        build(mid+1,r,dep+1);
-    }
-    ll dis(Node a,Node b){
-        ll res=0;
-        for(int i=0;i<K;i++){
-            res+=sq((ll)a.dim[i]-b.dim[i]);
-        }
-        return res?res:inf;
-    }
-    void query(int l,int r,int dep,Node node){
-        if(l>r) return ;
-        int mid=(l+r)>>1;
-        ll dist=dis(node,a[mid]);
-        int dim=dep%K;
-        if(dist<ans) ans=dist;
-        ll rd=sq((ll)a[mid].dim[dim]-node.dim[dim]);
-        if(node.dim[dim]<a[mid].dim[dim]){
-            query(l,mid-1,dep+1,node);
-            if(rd<ans) query(mid+1,r,dep+1,node);
-        }else{
-            query(mid+1,r,dep+1,node);
-            if(rd<ans) query(l,mid-1,dep+1,node);
-        }
-    }
-}KDT;
+ll square(int x){return ((ll)x)*((ll)x);}
+Point a[max_n],b[max_n];
+int T,N;
+void build(int l,int r,int d){
+	if(l>=r) return ;
+	int mid=(l+r)>>1;
+	int dep=d%K;
+	now=dep;
+	nth_element(b+l,b+mid,b+r,cmp);
+	build(l,mid,d+1);
+	build(mid+1,r,d+1);
+}
+ll ans;
+void query(int l,int r,int d,Point p){
+	if(l>=r) return ;
+	int mid=(l+r)>>1;
+	int dep=d%K;
+	ll dis=square(b[mid].dim[0]-p.dim[0])+square(b[mid].dim[1]-p.dim[1]);
+	if(ans==0) ans=dis;
+	if(dis!=0&&ans>dis) ans=dis;
+	if(p.dim[dep]>b[mid].dim[dep]){
+		query(mid+1,r,d+1,p);
+		if(ans>square(p.dim[dep]-b[mid].dim[dep])) query(l,mid,d+1,p);
+	}else{
+		query(l,mid,d+1,p);
+		if(ans>square(p.dim[dep]-b[mid].dim[dep])) query(mid+1,r,d+1,p);
+	}
+}
 int main(){
-    scanf("%d",&T);
-    while(T--){
-        scanf("%d",&N);
-        for(int i=0;i<N;i++){
-            for(int j=0;j<K;j++) scanf("%d",&a[i].dim[j]);
-            p[i]=a[i];
-        }
-        KDT.build(0,N-1,0);
-        for(int i=0;i<N;i++){
-            ans=inf;
-            KDT.query(0,N-1,0,p[i]);
-            printf("%lld\n",ans);
-        }
-    }
-    return 0;
+	scanf("%d",&T);
+	while(T--){
+		scanf("%d",&N);
+		for(int i=0;i<N;i++){
+			scanf("%d %d",&a[i].dim[0],&a[i].dim[1]);
+			b[i]=a[i];
+		}
+		build(0,N,0);
+		for(int i=0;i<N;i++){
+			ans=0;
+			query(0,N,0,a[i]);
+			printf("%lld\n",ans);
+		}
+	}
+	return 0;
 }
